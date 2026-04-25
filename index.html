@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2f5d50">
+  <title>Nákupní seznam - Albert Galerie Harfa</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f4ef;
+      --panel: #ffffff;
+      --ink: #20231f;
+      --muted: #667168;
+      --line: #d9ded5;
+      --accent: #2f5d50;
+      --accent-2: #b84c32;
+      --done: #7d897f;
+      --shadow: 0 10px 30px rgba(32, 35, 31, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    .app {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 18px 14px 36px;
+    }
+
+    header {
+      display: grid;
+      gap: 12px;
+      padding: 14px 0 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 7vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      gap: 10px;
+      padding: 12px 0;
+      background: linear-gradient(to bottom, var(--bg) 82%, rgba(246, 244, 239, 0));
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    input[type="search"] {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 13px;
+      background: var(--panel);
+      color: var(--ink);
+      font-size: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    button {
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px;
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      touch-action: manipulation;
+    }
+
+    button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .filters button {
+      min-height: 40px;
+      box-shadow: none;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .filters button.active {
+      border-color: var(--accent);
+      background: #e5efe9;
+      color: var(--accent);
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .progress {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #dfe5dc;
+    }
+
+    .bar {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 180ms ease;
+    }
+
+    main {
+      display: grid;
+      gap: 14px;
+    }
+
+    section {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin: 0;
+      padding: 14px 14px 10px;
+      font-size: 1.02rem;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      border-top: 1px solid var(--line);
+    }
+
+    label.item {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 9px;
+      align-items: start;
+      min-height: 58px;
+      padding: 12px 14px;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 24px;
+      height: 24px;
+      margin: 2px 0 0;
+      accent-color: var(--accent);
+    }
+
+    .name {
+      display: block;
+      font-size: 1rem;
+      font-weight: 680;
+    }
+
+    .note {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    li.done .name,
+    li.done .note {
+      color: var(--done);
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    .empty {
+      display: none;
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 4px 0 0;
+    }
+
+    details {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    summary {
+      min-height: 48px;
+      padding: 13px 14px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .recipes {
+      display: grid;
+      gap: 14px;
+      padding: 0 14px 16px;
+      color: #30362f;
+    }
+
+    .recipe h3 {
+      margin: 0 0 5px;
+      font-size: 1rem;
+    }
+
+    .recipe p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toast {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      left: 14px;
+      display: none;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #1f2722;
+      color: white;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+      text-align: center;
+    }
+
+    @media (min-width: 720px) {
+      .toolbar {
+        grid-template-columns: 1fr 280px;
+        align-items: start;
+      }
+
+      .search-row,
+      .progress-wrap {
+        grid-column: span 2;
+      }
+
+      main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      details {
+        grid-column: 1 / -1;
+      }
+
+      .actions {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Nákupní seznam</h1>
+      <div class="meta">
+        <span class="pill">Albert Galerie Harfa</span>
+        <span class="pill">25. 4. 2026</span>
+        <span class="pill" id="count-pill">0 / 0 hotovo</span>
+      </div>
+    </header>
+
+    <div class="toolbar" aria-label="Ovládání seznamu">
+      <div class="search-row">
+        <input id="search" type="search" placeholder="Hledat položku..." autocomplete="off">
+        <button id="clear-search" title="Vymazat hledání" aria-label="Vymazat hledání">X</button>
+      </div>
+      <div class="filters" role="group" aria-label="Filtr">
+        <button class="active" data-filter="all">Vše</button>
+        <button data-filter="open">Zbývá</button>
+        <button data-filter="done">Hotovo</button>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-text">
+          <span id="progress-label">Zatím nic odškrtnuto</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+      </div>
+    </div>
+
+    <main id="list"></main>
+
+    <div class="actions">
+      <button id="check-all">Označit vše</button>
+      <button id="uncheck-all">Vynulovat</button>
+      <button id="copy-open" class="primary">Kopírovat zbývající</button>
+      <button id="share-open">Sdílet</button>
+    </div>
+
+    <details>
+      <summary>Recepty pro připomenutí</summary>
+      <div class="recipes">
+        <div class="recipe">
+          <h3>Krkovice na jarní cibulce</h3>
+          <p>Maso na plátky, osolit, opepřit, okmínovat. Zprudka orestovat. V pekáčku zasypat nakrájenou jarní cibulkou a česnekem. Podlít trochou vody nebo piva a péct na 180 °C cca hodinu. Podávat s bramborem.</p>
+        </div>
+        <div class="recipe">
+          <h3>Rychlá Boloňská z protlaku</h3>
+          <p>Na cibuli a česneku orestovat mleté maso. Přidat 2 protlaky, sůl, pepř, trochu cukru na vyvážení kyselosti a bylinky. Nechat provařit. Podávat s těstovinami a sýrem.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "nakupni-seznam-albert-harfa-2026-04-25";
+
+    const sections = [
+      {
+        title: "Maso a uzeniny",
+        items: [
+          ["krkovice", "Vepřová krkovice bez kosti", "v akci 79,90 Kč/kg - cca 1 kg"],
+          ["mleté-maso", "Mleté maso", "mix nebo hovězí - 500 g"]
+        ]
+      },
+      {
+        title: "Zelenina a bylinky",
+        items: [
+          ["jarní-cibulka", "Jarní cibulka", "v akci 13,90 Kč/svazek - 2 svazky"],
+          ["cesnek", "Česnek", "1 palice"],
+          ["cibule", "Cibule", "1-2 ks"],
+          ["brambory", "Brambory", "1-2 kg"],
+          ["bylinky", "Čerstvé bylinky", "bazalka, oregano, petrželka..."]
+        ]
+      },
+      {
+        title: "Trvanlivé potraviny",
+        items: [
+          ["protlak", "Rajčatový protlak Giana", "v akci 17,90 Kč - 2 ks"],
+          ["těstoviny", "Těstoviny", "špagety nebo jiné - 500 g"],
+          ["koreni", "Koření", "pokud nemáte doma: sůl, pepř, kmín, sušené oregano/bazalka, cukr"],
+          ["olej-sadlo", "Olej nebo sadlo", ""]
+        ]
+      },
+      {
+        title: "Mléčné výrobky",
+        items: [
+          ["syr", "Sýr na posypání těstovin", "např. Eidam, Gouda nebo Grana Padano"]
+        ]
+      },
+      {
+        title: "Ostatní",
+        items: [
+          ["koureni", "Kouření", "cigarety/tabák"],
+          ["pivo", "Pivo", "na podlití masa i pro kuchaře"]
+        ]
+      }
+    ];
+
+    const list = document.querySelector("#list");
+    const search = document.querySelector("#search");
+    const countPill = document.querySelector("#count-pill");
+    const progressLabel = document.querySelector("#progress-label");
+    const progressPercent = document.querySelector("#progress-percent");
+    const bar = document.querySelector("#bar");
+    const toast = document.querySelector("#toast");
+    let filter = "all";
+    let state = loadState();
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function allItems() {
+      return sections.flatMap(section => section.items.map(item => ({ section: section.title, id: item[0], name: item[1], note: item[2] })));
+    }
+
+    function normalize(value) {
+      return value.toLocaleLowerCase("cs-CZ");
+    }
+
+    function render() {
+      const query = normalize(search.value.trim());
+      list.innerHTML = "";
+
+      sections.forEach(section => {
+        const visibleItems = section.items.filter(([id, name, note]) => {
+          const done = Boolean(state[id]);
+          const matchesFilter = filter === "all" || (filter === "done" ? done : !done);
+          const matchesSearch = !query || normalize(`${name} ${note} ${section.title}`).includes(query);
+          return matchesFilter && matchesSearch;
+        });
+
+        if (!visibleItems.length) return;
+
+        const sectionEl = document.createElement("section");
+        const title = document.createElement("h2");
+        title.textContent = section.title;
+        sectionEl.appendChild(title);
+
+        const ul = document.createElement("ul");
+        visibleItems.forEach(([id, name, note]) => {
+          const li = document.createElement("li");
+          li.className = state[id] ? "done" : "";
+          li.dataset.id = id;
+
+          const label = document.createElement("label");
+          label.className = "item";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = Boolean(state[id]);
+          checkbox.addEventListener("change", () => {
+            state[id] = checkbox.checked;
+            saveState();
+            render();
+          });
+
+          const text = document.createElement("span");
+          const nameEl = document.createElement("span");
+          nameEl.className = "name";
+          nameEl.textContent = name;
+          text.appendChild(nameEl);
+
+          if (note) {
+            const noteEl = document.createElement("span");
+            noteEl.className = "note";
+            noteEl.textContent = note;
+            text.appendChild(noteEl);
+          }
+
+          label.append(checkbox, text);
+          li.appendChild(label);
+          ul.appendChild(li);
+        });
+
+        sectionEl.appendChild(ul);
+        list.appendChild(sectionEl);
+      });
+
+      if (!list.children.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.style.display = "block";
+        empty.textContent = "Nic neodpovídá filtru.";
+        list.appendChild(empty);
+      }
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const items = allItems();
+      const done = items.filter(item => state[item.id]).length;
+      const total = items.length;
+      const percent = total ? Math.round((done / total) * 100) : 0;
+      countPill.textContent = `${done} / ${total} hotovo`;
+      progressPercent.textContent = `${percent}%`;
+      progressLabel.textContent = done === 0 ? "Zatím nic odškrtnuto" : done === total ? "Vše nakoupeno" : `Zbývá ${total - done} položek`;
+      bar.style.width = `${percent}%`;
+    }
+
+    function remainingText() {
+      const lines = ["Nákupní seznam - zbývá koupit:"];
+      sections.forEach(section => {
+        const remaining = section.items.filter(([id]) => !state[id]);
+        if (!remaining.length) return;
+        lines.push("", section.title + ":");
+        remaining.forEach(([, name, note]) => {
+          lines.push(`- ${name}${note ? " (" + note + ")" : ""}`);
+        });
+      });
+      return lines.join("\n");
+    }
+
+    async function copyText(text) {
+      await navigator.clipboard.writeText(text);
+      showToast("Zbývající položky jsou zkopírované.");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.style.display = "block";
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => {
+        toast.style.display = "none";
+      }, 2200);
+    }
+
+    document.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        filter = button.dataset.filter;
+        document.querySelectorAll("[data-filter]").forEach(item => item.classList.toggle("active", item === button));
+        render();
+      });
+    });
+
+    document.querySelector("#clear-search").addEventListener("click", () => {
+      search.value = "";
+      render();
+      search.focus();
+    });
+
+    document.querySelector("#check-all").addEventListener("click", () => {
+      allItems().forEach(item => state[item.id] = true);
+      saveState();
+      render();
+    });
+
+    document.querySelector("#uncheck-all").addEventListener("click", () => {
+      state = {};
+      saveState();
+      render();
+    });
+
+    document.querySelector("#copy-open").addEventListener("click", async () => {
+      try {
+        await copyText(remainingText());
+      } catch {
+        showToast("Kopírování v tomto prohlížeči nešlo spustit.");
+      }
+    });
+
+    document.querySelector("#share-open").addEventListener("click", async () => {
+      const text = remainingText();
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: "Nákupní seznam", text });
+          return;
+        } catch {
+          return;
+        }
+      }
+      try {
+        await copyText(text);
+      } catch {
+        showToast("Sdílení není dostupné.");
+      }
+    });
+
+    search.addEventListener("input", render);
+    render();
+  </script>
+</body>
+</html>
