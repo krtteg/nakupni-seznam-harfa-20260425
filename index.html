@@ -464,7 +464,7 @@
       <h1>Nákupní seznam</h1>
       <div class="meta">
         <span class="pill">Albert Galerie Harfa</span>
-        <span class="pill">25. 4. 2026</span>
+        <span class="pill" id="date-pill"></span>
         <span class="pill" id="count-pill">0 / 0 hotovo</span>
       </div>
     </header>
@@ -498,23 +498,23 @@
     </div>
 
     <details>
-      <summary>Recepty pro připomenutí</summary>
+      <summary>Postup vaření</summary>
       <div class="recipes">
         <div class="recipe">
           <h3>Krkovice s bramborami z jednoho pekáče</h3>
-          <p>Brambory nakrájet na měsíčky, promíchat s olejem, solí, kmínem, pepřem, cibulí a česnekem. Krkovici osolit, opepřit, potřít trochou hořčice a papriky, položit na brambory. Podlít pivem nebo vodou, přikrýt a péct 45 minut na 180 °C. Odkrýt, přidat jarní cibulku a dopéct 25-35 minut dozlatova.</p>
+          <p>1) Předehřej troubu na 180 °C. 2) Brambory nakrájej na měsíčky a promíchej je s olejem, solí, kmínem, pepřem, cibulí a česnekem. 3) Krkovici osol, opepři a lehce potřete hořčicí s paprikou. 4) Vše dej do pekáče, podlij pivem nebo vodou, přikryj a peč 45 minut. 5) Odkryj, přidej jarní cibulku a dopékej ještě 25-35 minut dozlatova.</p>
         </div>
         <div class="recipe">
           <h3>Rychlá Boloňská z protlaku</h3>
-          <p>Na cibuli a česneku orestovat mleté maso. Přidat 2 protlaky, sůl, pepř, trochu cukru na vyvážení kyselosti a bylinky. Nechat provařit. Podávat s těstovinami a sýrem.</p>
+          <p>1) Na cibuli a česneku orestuj mleté maso dozlatova. 2) Přidej oba protlaky, sůl, pepř, špetku cukru a bylinky. 3) Nech 10-15 minut provařit, aby se chuť zjemnila. 4) Podávej s těstovinami a sýrem.</p>
         </div>
         <div class="recipe">
           <h3>Špagety s krevetami, chilli a olivovým olejem</h3>
-          <p>Špagety uvařit hodně al dente a schovat hrnek vody z těstovin. Na olivovém oleji krátce rozvonět česnek a chilli, přidat osušené krevety a opéct 1-2 minuty z každé strany. Vmíchat špagety, trochu vody z těstovin, sůl, pepř a případně petrželku. Na talíři zakápnout olivovým olejem.</p>
+          <p>1) Uvař špagety al dente a nech si stranou hrnek vody z těstovin. 2) Na olivovém oleji krátce rozvon česnek a chilli. 3) Přidej osušené krevety a opékej je 1-2 minuty z každé strany. 4) Vmíchej těstoviny, trochu vody z vaření, sůl, pepř a případně petrželku. 5) Na talíři už jen zakápni olivovým olejem.</p>
         </div>
         <div class="recipe">
           <h3>Grilovaný camembert</h3>
-          <p>Camembert potřít trochou oleje, posypat pepřem, paprikou nebo bylinkami a zabalit do alobalu. Grilovat nebo opéct na pánvi cca 6-8 minut z každé strany. Podávat s pečivem, okurkou nebo salátem.</p>
+          <p>1) Camembert potřete trochou oleje a posypte pepřem, paprikou nebo bylinkami. 2) Zabalte ho do alobalu. 3) Grilujte nebo opékejte na pánvi 6-8 minut z každé strany. 4) Podávejte s pečivem, okurkou nebo salátem.</p>
         </div>
       </div>
     </details>
@@ -577,6 +577,7 @@
 
     const list = document.querySelector("#list");
     const search = document.querySelector("#search");
+    const datePill = document.querySelector("#date-pill");
     const countPill = document.querySelector("#count-pill");
     const progressLabel = document.querySelector("#progress-label");
     const progressPercent = document.querySelector("#progress-percent");
@@ -584,6 +585,16 @@
     const toast = document.querySelector("#toast");
     let filter = "all";
     let state = loadState();
+
+    function formatCzechDate(date = new Date()) {
+      return new Intl.DateTimeFormat("cs-CZ", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric"
+      }).format(date);
+    }
+
+    datePill.textContent = formatCzechDate();
 
     function loadState() {
       try {
