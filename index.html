@@ -501,16 +501,8 @@
       <summary>Postup vaření</summary>
       <div class="recipes">
         <div class="recipe">
-          <h3>Kuřecí penne s rajčaty</h3>
-          <p>1) Dej vařit penne do osolené vody. 2) Kuřecí řízky nakrájej na kousky a na pánvi je opeč na oleji dozlatova. 3) Přidej rajčata, případně česnek nebo cibuli, osol a opepři. 4) Vmíchej scezené penne, prohřej a podávej hned. 5) Když chceš, přidej na konec lžíci bílého jogurtu pro jemnější chuť.</p>
-        </div>
-        <div class="recipe">
-          <h3>Studený těstovinový salát</h3>
-          <p>1) Nech část penne vychladnout. 2) Smíchej je se zbylým kuřetem a rajčaty. 3) Přidej trochu bílého jogurtu jako lehký dresink, osol a opepři. 4) Dej aspoň na chvíli do lednice, ať se chutě spojí. 5) Podávej studené jako oběd bez dramatu.</p>
-        </div>
-        <div class="recipe">
-          <h3>Uzený losos s rajčaty</h3>
-          <p>1) Lososa vyndej z lednice chvíli před podáváním. 2) Rajčata překroj napůl a lehce osol. 3) Vše dej na talíř, případně přidej pečivo. 4) Můžeš zakápnout citronem nebo olivovým olejem, pokud máš doma. 5) Hotovo za pár minut, přesně jak má taková večeře vypadat.</p>
+          <h3>Risotto s krevetami pro začátečníka</h3>
+          <p>1) Připrav si horký vývar, nakrájej cibuli na jemno, česnek na jemno a krevety osušte. 2) Krevety krátce opeč na pánvi 1–2 minuty z každé strany a dej je stranou. 3) Do hrnce dej olivový olej, zesklovatěj cibuli, přidej česnek a rýži a asi minutu míchej. 4) Zalij bílým vínem a nech ho skoro celé odpařit. 5) Pak přidávej vývar po naběračkách a míchej asi 18–20 minut, dokud nebude rýže krémová, ale ještě na skus. 6) Vmíchej krevety, máslo, parmazán a citronovou šťávu i trochu kůry, dochuť solí a pepřem a hned podávej.</p>
         </div>
       </div>
     </details>
@@ -519,27 +511,42 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const STORAGE_KEY = "nakupni-seznam-albert-harfa-2026-05-09";
+    const STORAGE_KEY = "nakupni-seznam-risotto-s-krevetami-2026-05-23";
 
     const sections = [
       {
-        title: "Maso a ryby",
+        title: "Mořské plody",
         items: [
-          ["kureci-prsa", "Královské kuřecí prsní řízky 600 g", "149,90 Kč"],
-          ["losos", "Losos uzený 125 g", "79,90 Kč"]
+          ["krevety", "Krevety loupané 250 g", "cca 250 g"]
         ]
       },
       {
-        title: "Těstoviny a přílohy",
+        title: "Rýže a tekutiny",
         items: [
-          ["penne", "Gustona Penne 400 g", "12,90 Kč"],
-          ["rajcata", "Rajčata cherry oválná 500 g", "9,98 Kč s Můj Albert / 11,98 Kč bez appky"]
+          ["arborio", "Rýže Arborio nebo Carnaroli", "180 g"],
+          ["vyvar", "Vývar zeleninový nebo kuřecí", "700–800 ml"],
+          ["vino", "Suché bílé víno", "100 ml"]
         ]
       },
       {
-        title: "Mléčné výrobky",
+        title: "Zelenina a dochucení",
         items: [
-          ["jogurt", "Albert jogurt bílý 150 g", "7,90 Kč"]
+          ["cibule", "Cibule nebo šalotka", "1 ks"],
+          ["cesnek", "Česnek", "1 stroužek"],
+          ["citron", "Citron", "1 ks"],
+          ["petrezel", "Petrželka", "volitelné"],
+          ["hrasek", "Hrášek", "volitelné"],
+          ["chilli", "Chilli vločky", "volitelné"]
+        ]
+      },
+      {
+        title: "Mléčné a spíž",
+        items: [
+          ["maslo", "Máslo", "20–30 g"],
+          ["parmazan", "Parmazán", "30–40 g"],
+          ["olej", "Olivový olej", "2 lžíce"],
+          ["sul", "Sůl", "podle chuti"],
+          ["pepr", "Černý pepř", "podle chuti"]
         ]
       }
     ];
